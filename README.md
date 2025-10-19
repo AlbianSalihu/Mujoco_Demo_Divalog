@@ -20,7 +20,7 @@ Real-time visual servoing system for a Panda robot arm tracking a moving target 
 
 ### Installation
 ```bash
-git clone https://github.com/yourusername/visual-servoing.git
+git clone https://github.com/AlbianSalihu/Mujoco_Demo_Divalog.git
 cd Mujoco_Demo
 pip install -r requirements.txt
 ```
