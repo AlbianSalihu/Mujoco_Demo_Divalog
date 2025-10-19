@@ -3,7 +3,7 @@
 Système d'asservissement visuel en temps réel pour un bras robotique Panda suivant une cible mobile avec simulation MuJoCo. Démontre la cinématique inverse, le contrôle de trajectoire fluide et le retour visuel.
 
 ## 🎥 Démo
-Mujoco_demo.mp4
+![Robot Demo](Mujoco_demo.gif)
 
 ## ✨ Fonctionnalités
 - **Cinématique Inverse 6-DDL**: Solveur par moindres carrés amortis avec amortissement adaptatif
