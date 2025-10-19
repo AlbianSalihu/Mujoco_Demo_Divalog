@@ -123,14 +123,6 @@ où α ∈ [0,1] contrôle réactivité vs fluidité.
 - **OpenCV**: Vision par ordinateur et visualisation
 - **Python 3.10**: Langage moderne compatible async
 
-## 📈 Extensions Possibles
-- [ ] Filtre de Kalman pour une meilleure estimation d'état
-- [ ] Optimisation de trajectoire (MPC, iLQR)
-- [ ] Suivi multi-cibles
-- [ ] Déploiement sur matériel réel (Franka Panda)
-- [ ] IK basé sur l'apprentissage (approximateur par réseau de neurones)
-- [ ] Évitement d'obstacles
-
 ## 🐛 Dépannage
 
 **Le robot bouge trop vite:**
