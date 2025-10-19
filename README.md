@@ -1,20 +1,20 @@
-# 🤖 Visual Servoing for Robotic Manipulation
+# 🤖 Asservissement Visuel pour la Manipulation Robotique
 
-Real-time visual servoing system for a Panda robot arm tracking a moving target using MuJoCo simulation. Demonstrates inverse kinematics, smooth trajectory control, and vision-based feedback.
+Système d'asservissement visuel en temps réel pour un bras robotique Panda suivant une cible mobile avec simulation MuJoCo. Démontre la cinématique inverse, le contrôle de trajectoire fluide et le retour visuel.
 
-## 🎥 Demo
+## 🎥 Démo
+Mujoco_demo.mp4
 
+## ✨ Fonctionnalités
+- **Cinématique Inverse 6-DDL**: Solveur par moindres carrés amortis avec amortissement adaptatif
+- **Boucle de Retour Visuel**: Suivi par caméra aérienne avec OpenCV
+- **Contrôle de Mouvement Fluide**: Lissage exponentiel et limitation de vitesse
+- **Contrôle d'Orientation Adaptatif**: Pondération dynamique basée sur la distance à la cible
+- **Visualisation Temps Réel**: Flux caméra en direct avec détection de cible
 
-## ✨ Features
-- **6-DOF Inverse Kinematics**: Damped least squares solver with adaptive damping
-- **Visual Feedback Loop**: Overhead camera tracking with OpenCV
-- **Smooth Motion Control**: Exponential smoothing and velocity limiting
-- **Adaptive Orientation Control**: Dynamic weighting based on distance to target
-- **Real-time Visualization**: Live camera feed with target detection
+## 🚀 Démarrage Rapide
 
-## 🚀 Quick Start
-
-### Prerequisites
+### Prérequis
 - Python 3.8+
 - pip
 
@@ -25,141 +25,125 @@ cd Mujoco_Demo
 pip install -r requirements.txt
 ```
 
-### Run
+### Exécution
 ```bash
 python src/main.py
 ```
 
-### Controls
-- **SPACE/S**: Start tracking
+### Commandes
+- **ESPACE/S**: Démarrer le suivi
 - **P**: Pause
-- **R**: Reset to home position
-- **ESC**: Quit
+- **R**: Réinitialiser à la position d'origine
+- **ESC**: Quitter
 
-## 🏗️ Project Structure
+## 🏗️ Structure du Projet
 ```
 src/
-├── main.py           # Main control loop & state machine
-├── ik_control.py     # Inverse kinematics solver
-├── vision.py         # Camera rendering & object detection
-├── sim.py            # MuJoCo scene setup
-├── config.py         # Configuration parameters
-└── utils.py          # Orientation & helper functions
+├── main.py           # Boucle de contrôle principale & machine à états
+├── ik_control.py     # Solveur de cinématique inverse
+├── vision.py         # Rendu caméra & détection d'objets
+├── sim.py            # Configuration de la scène MuJoCo
+├── config.py         # Paramètres de configuration
+└── utils.py          # Fonctions d'orientation & utilitaires
 ```
 
-## 🧠 Technical Deep Dive
+## 🧠 Analyse Technique Approfondie
 
-### Inverse Kinematics Solver
-- **Algorithm**: Damped Least Squares (DLS) with adaptive damping
-- **Singularity Handling**: λ = λ₀(1 + α‖e‖) prevents numerical instability
-- **Line Search**: Backtracking to ensure convergence
-- **Control Point**: TCP computed as midpoint between gripper fingers
+### Solveur de Cinématique Inverse
+- **Algorithme**: Moindres Carrés Amortis (DLS) avec amortissement adaptatif
+- **Gestion des Singularités**: λ = λ₀(1 + α‖e‖) prévient l'instabilité numérique
+- **Recherche Linéaire**: Retour en arrière pour assurer la convergence
+- **Point de Contrôle**: TCP calculé comme point médian entre les doigts du préhenseur
 ```python
-# Core IK equation (simplified)
+# Équation IK de base (simplifiée)
 dq = J^T (JJ^T + λI)^(-1) e
 ```
 
-### Visual Servoing Loop
-1. **Capture**: Render overhead camera view
-2. **Detect**: OpenCV-based target detection (HSV color filtering)
-3. **Track**: Exponential smoothing: `x_t = (1-α)x_{t-1} + αx_measured`
-4. **Solve IK**: Compute joint velocities to reach target
-5. **Execute**: Apply joint commands with velocity limits
+### Boucle d'Asservissement Visuel
+1. **Capture**: Rendu de la vue caméra aérienne
+2. **Détection**: Détection de cible basée sur OpenCV (filtrage couleur HSV)
+3. **Suivi**: Lissage exponentiel: `x_t = (1-α)x_{t-1} + αx_mesuré`
+4. **Résolution IK**: Calcul des vitesses articulaires pour atteindre la cible
+5. **Exécution**: Application des commandes articulaires avec limitation de vitesse
 
-### Key Parameters
-- `step_size: 0.1` - Controls motion speed (lower = smoother/slower)
-- `dq_limit: 0.01` - Maximum joint velocity per iteration
-- `smooth_alpha: 0.1` - Target smoothing factor (lower = more filtering)
-- `follow_height: 0.2` - Height above target (meters)
+### Paramètres Clés
+- `step_size: 0.1` - Contrôle la vitesse de mouvement (plus bas = plus fluide/lent)
+- `dq_limit: 0.01` - Vitesse articulaire maximale par itération
+- `smooth_alpha: 0.1` - Facteur de lissage de cible (plus bas = plus de filtrage)
+- `follow_height: 0.2` - Hauteur au-dessus de la cible (mètres)
 
-## 📊 Performance Metrics
-- **Control Frequency**: 100 Hz
-- **Convergence Error**: <5mm typical
-- **IK Iterations**: 6 per control cycle
-- **Latency**: ~10ms end-to-end
+## 📊 Métriques de Performance
+- **Fréquence de Contrôle**: 100 Hz
+- **Erreur de Convergence**: <5mm typique
+- **Itérations IK**: 6 par cycle de contrôle
+- **Latence**: ~10ms de bout en bout
 
-## 🎛️ Tuning Guide
+## 🎛️ Guide de Réglage
 
-### Make it slower/smoother:
+### Rendre plus lent/fluide:
 ```python
-# In ik_control.py -> IKConfig
-step_size = 0.05      # Very slow
-dq_limit = 0.005      # Very gentle
+# Dans ik_control.py -> IKConfig
+step_size = 0.05      # Très lent
+dq_limit = 0.005      # Très doux
 
-# In main.py -> ControlConfig
-smooth_alpha = 0.05   # Heavy smoothing
+# Dans main.py -> ControlConfig
+smooth_alpha = 0.05   # Lissage important
 ```
 
-### Make it faster/more responsive:
+### Rendre plus rapide/réactif:
 ```python
-step_size = 0.3       # Fast
-dq_limit = 0.03       # Aggressive
-smooth_alpha = 0.3    # Less filtering
+step_size = 0.3       # Rapide
+dq_limit = 0.03       # Agressif
+smooth_alpha = 0.3    # Moins de filtrage
 ```
 
-## 🔬 Mathematical Background
+## 🔬 Contexte Mathématique
 
-### Damped Least Squares
-Solves the underdetermined system `J dq = e` where:
-- `J` ∈ ℝ^(6×n): Jacobian matrix
-- `dq` ∈ ℝ^n: Joint velocities
-- `e` ∈ ℝ^6: Position + orientation error
+### Moindres Carrés Amortis
+Résout le système sous-déterminé `J dq = e` où:
+- `J` ∈ ℝ^(6×n): Matrice jacobienne
+- `dq` ∈ ℝ^n: Vitesses articulaires
+- `e` ∈ ℝ^6: Erreur de position + orientation
 
-DLS adds damping to handle singularities:
+DLS ajoute un amortissement pour gérer les singularités:
 ```
 dq = J^T (JJ^T + λI)^(-1) e
 ```
 
-### Exponential Smoothing
-Filters noisy target positions:
+### Lissage Exponentiel
+Filtre les positions de cible bruitées:
 ```
-x_smooth[t] = α·x_measured[t] + (1-α)·x_smooth[t-1]
+x_lissé[t] = α·x_mesuré[t] + (1-α)·x_lissé[t-1]
 ```
-where α ∈ [0,1] controls responsiveness vs smoothness.
+où α ∈ [0,1] contrôle réactivité vs fluidité.
 
 ## 🛠️ Technologies
-- **MuJoCo 3.0**: Fast physics simulation with contact dynamics
-- **NumPy**: Linear algebra and numerical computation
-- **OpenCV**: Computer vision and visualization
-- **Python 3.10**: Modern async-capable language
+- **MuJoCo 3.0**: Simulation physique rapide avec dynamique de contact
+- **NumPy**: Algèbre linéaire et calcul numérique
+- **OpenCV**: Vision par ordinateur et visualisation
+- **Python 3.10**: Langage moderne compatible async
 
-## 📈 Possible Extensions
-- [ ] Kalman filter for better state estimation
-- [ ] Trajectory optimization (MPC, iLQR)
-- [ ] Multi-target tracking
-- [ ] Real hardware deployment (Franka Panda)
-- [ ] Learning-based IK (neural network approximator)
-- [ ] Obstacle avoidance
+## 📈 Extensions Possibles
+- [ ] Filtre de Kalman pour une meilleure estimation d'état
+- [ ] Optimisation de trajectoire (MPC, iLQR)
+- [ ] Suivi multi-cibles
+- [ ] Déploiement sur matériel réel (Franka Panda)
+- [ ] IK basé sur l'apprentissage (approximateur par réseau de neurones)
+- [ ] Évitement d'obstacles
 
-## 🐛 Troubleshooting
+## 🐛 Dépannage
 
-**Robot moves too fast:**
+**Le robot bouge trop vite:**
 ```python
-# Reduce step_size and dq_limit in ik_control.py
+# Réduire step_size et dq_limit dans ik_control.py
 ```
 
-**Jittery motion:**
+**Mouvement saccadé:**
 ```python
-# Increase smooth_alpha in main.py (more smoothing)
+# Augmenter smooth_alpha dans main.py (plus de lissage)
 ```
 
-**IK not converging:**
+**IK ne converge pas:**
 ```python
-# Increase damping_base or iterations in IKConfig
+# Augmenter damping_base ou iterations dans IKConfig
 ```
-
-## 📚 References
-- Buss, S. R. (2004). "Introduction to Inverse Kinematics"
-- Chiaverini, S. et al. (2008). "The Parallel Approach to Force/Position Control of Robotic Manipulators"
-- MuJoCo Documentation: https://mujoco.readthedocs.io
-
-## 📄 License
-MIT License - See LICENSE file
-
-## 👤 Author
-[Your Name]  
-[LinkedIn] | [Email] | [Portfolio]
-
----
-
-*Developed as a demonstration of robotics fundamentals: kinematics, control theory, and computer vision integration.*
